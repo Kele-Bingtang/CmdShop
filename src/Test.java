@@ -22,19 +22,22 @@ public class Test {
             ReadUserExcel readUserExcel = new ReadUserExcel();//创建对象
             User users[] = readUserExcel.readExcel(usersIn);
 
-            InputStream productIn = Class.forName("Test").getResourceAsStream("/product.xlsx");//表示的就是classpath
-            ReadProductExcel readProductExcelExcel = new ReadProductExcel();//创建对象
-            Product products[] = readProductExcelExcel.readExcel(productIn);
+
 
             for(int i=0;i<users.length;i++){
                 if(username.equals(users[i].getUsername()) && password.equals(users[i].getPassword())){
                     System.out.println("登录成功");
-                    System.out.println("商品为：");
+
+                    InputStream productIn = Class.forName("Test").getResourceAsStream("/product.xlsx");//表示的就是classpath
+                    ReadProductExcel readProductExcelExcel = new ReadProductExcel();//创建对象
+                    Product products[] = readProductExcelExcel.readExcel(productIn);
+
+                    System.out.println("商品内容：");
                     for(Product p : products){
-                        System.out.println(p.getProductId());
-                        System.out.println("\t" + p.getProductName());
-                        System.out.println("\t" + p.getProductPrice());
-                        System.out.println("\t" + p.getProductdesc());
+                        System.out.println("Id：" + p.getProductId());
+                        System.out.println("名称：" + p.getProductName());
+                        System.out.println("价格：" + p.getProductPrice());
+                        System.out.println("描述：" + p.getProductdesc());
                     }
 
                     bool = false;
