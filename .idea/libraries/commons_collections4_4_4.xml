@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="commons-collections4-4.4">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Desktop/poi/commons-collections4-4.4.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/poi/commons-compress-1.19.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/poi/poi-4.1.2.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/poi/poi-ooxml-4.1.2.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/poi/poi-ooxml-schemas-4.1.2.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/poi/xmlbeans-3.1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
