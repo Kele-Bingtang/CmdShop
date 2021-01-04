@@ -3,7 +3,7 @@ import java.util.Date;
 public class Order {
 
     private User user;  //用户信息
-    private Product product;    //商品信息
+    private Product[] products;    //商品信息
     private int productAmmount; //商品价格
     private float totalPrice;   //交付金额
     private float finalDay;
@@ -17,12 +17,12 @@ public class Order {
         this.user = user;
     }
 
-    public Product getProduct() {
-        return product;
+    public Product[] getProduct() {
+        return products;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProduct(Product[] product) {
+        this.products = product;
     }
 
     public int getProductAmmount() {

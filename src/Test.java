@@ -13,8 +13,8 @@ public class Test {
 
     public static void main(String[] args) throws Exception{
         Test test = new Test();
-        test.login();       //登录
-        test.lookProducts();    //查询商品
+        User oneUser = test.login();       //登录,获取User信息
+        Product[] products = test.lookProducts();    //查询商品，获得Product信息
 
         while(isExits){
             int choose = test.chooseBuyAndPush();   //进行商品和购物车选择
@@ -23,6 +23,16 @@ public class Test {
             }
             else if(choose == 2){
                 test.lookCarts(); //执行选择的操作
+            }else if(choose == 3){
+                Order order = new Order();
+                if(oneUser != null && products != null){
+                    order.setUser(oneUser);
+                    order.setProduct(products);
+                }
+                for(int i = 0;i < test.carts.length;i++){
+                    order.setProductAmmount(test.carts[i].getProductPrice());
+                }
+                
             }
             else if(choose == 4){
                 isExits = false;
@@ -36,7 +46,7 @@ public class Test {
      * 登录界面
      * @throws Exception
      */
-    public void login() throws Exception {
+    public User login() throws Exception {
         System.out.println("请输入用户名：");
 
         sc = new Scanner(System.in);
@@ -56,18 +66,19 @@ public class Test {
         for (int i = 0; i < users.length; i++) {
             if (username.equals(users[i].getUsername()) && password.equals(users[i].getPassword())) {
                 System.out.println("登录成功");
-                break;
+                return users[i];
             } else {
                 System.out.println("登录失败");
             }
         }
+        return null;
     }
 
     /**
      * 商品内容界面
      * @throws Exception
      */
-    public void lookProducts() throws Exception{
+    public Product[] lookProducts() throws Exception{
         inProduct = Class.forName("Test").getResourceAsStream("/product.xlsx");//表示的就是classpath
         readProductExcel = new ReadProductExcel();//创建对象
         Product products[] = readProductExcel.getAllProducts(inProduct);
@@ -79,6 +90,7 @@ public class Test {
             System.out.println("价格：" + p.getProductPrice());
             System.out.println("描述：" + p.getProductdesc());
         }
+        return products;
     }
 
     /**
