@@ -46,8 +46,8 @@ public class ReadUserExcel {
 
     private String getValue(XSSFCell cell) {
         String value;
-        CellType type = cell.getCellTypeEnum();
-
+        //CellType type = cell.getCellTypeEnum();
+        CellType type = cell.getCellType();
         switch (type) {
             case STRING:
                 value = cell.getStringCellValue();

@@ -29,7 +29,9 @@ public class ReadProductExcel {
                     } else if (k == 1) {
                         product.setProductName(this.getValue(cell));//给password属性赋值
                     } else if (k == 2) {
-                        product.setProductPrice(this.getValue(cell));//给address属性赋值
+                        String str = this.getValue(cell);
+                        int value = Integer.parseInt(str);
+                        product.setProductPrice(value);//给address属性赋值
                     } else if (k == 3) {
                         product.setProductdesc(this.getValue(cell));//给phone属性赋值
                     }
@@ -60,7 +62,9 @@ public class ReadProductExcel {
                     } else if (k == 1) {
                         product.setProductName(this.getValue(cell));//给password属性赋值
                     } else if (k == 2) {
-                        product.setProductPrice(this.getValue(cell));//给address属性赋值
+                        String str = this.getValue(cell);
+                        int value = Integer.parseInt(str);
+                        product.setProductPrice(value);//给address属性赋值
                     } else if (k == 3) {
                         product.setProductdesc(this.getValue(cell));//给phone属性赋值
                     }
