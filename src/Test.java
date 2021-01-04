@@ -3,20 +3,33 @@ import java.util.Scanner;
 
 public class Test {
     static Scanner sc;
+    static boolean isExits = true;
     InputStream inUser;
     InputStream inProduct = null;
 
     ReadProductExcel readProductExcel = null;
     Product[] carts = new Product[3];
 
+
     public static void main(String[] args) throws Exception{
         Test test = new Test();
         test.login();       //登录
         test.lookProducts();    //查询商品
 
-        int choose = test.chooseBuyAndPush();   //进行商品和购物车选择
-        test.lookCarts(choose); //执行选择的操作
+        while(isExits){
+            int choose = test.chooseBuyAndPush();   //进行商品和购物车选择
+            if(choose == 1){
+                test.addCarts(); //执行选择的操作
+            }
+            else if(choose == 2){
+                test.lookCarts(); //执行选择的操作
+            }
+            else if(choose == 3){
+                isExits = false;
+                System.exit(0);
+            }
 
+        }
     }
 
     /**
@@ -79,24 +92,10 @@ public class Test {
     }
 
     /**
-     * 再次选择界面
-     * @return
-     */
-    public int newChooseBuyAndPush(){
-        System.out.println("请输入你要查询的功能：\n1、继续把商品加入购物车\n2、查询购物车内容\n3、退出");
-        int choose  = sc.nextInt();
-        return choose;
-    }
-
-    /**
-     * 购物车相关功能
      * 加入商品到购物车
-     * 查询购物车内容
-     * @param choose
      * @throws Exception
      */
-    public void lookCarts(int choose) throws Exception{
-        if(choose == 1){
+    public void addCarts() throws Exception{
             System.out.println("请输入商品ID把该商品加入购物车");
             String pId = sc.next();
             int count = 0;
@@ -104,38 +103,26 @@ public class Test {
             inProduct = null;
             inProduct = Class.forName("Test").getResourceAsStream("/product.xlsx");//表示的就是classpath
             Product product = readProductExcel.getProductByID(pId,inProduct);
-            System.out.println("要购买的商品价格：" + product.getProductId());
+            System.out.println("要购买的商品价格：" + product.getProductPrice());
             if(product != null){
                 carts[count++] = product;
                 System.out.println("加入商品成功！");
             }
-            choose = newChooseBuyAndPush();
-            if(choose != 3){
-                lookCarts(choose);
-            }else {
-                System.exit(0);
+        }
+
+    public void lookCarts(){
+        for(Product c : carts){
+            if(c != null){
+                System.out.println("购物车内容：");
+                System.out.println("Id：" + c.getProductId());
+                System.out.println("名称：" + c.getProductName());
+                System.out.println("价格：" + c.getProductPrice());
+                System.out.println("描述：" + c.getProductdesc());
+                break;
+            }else{
+                System.out.println("购物车为空");
+                break;
             }
-        }else if(choose == 2){
-            for(Product c : carts){
-                if(c != null){
-                    System.out.println("购物车内容：");
-                    System.out.println("Id：" + c.getProductId());
-                    System.out.println("名称：" + c.getProductName());
-                    System.out.println("价格：" + c.getProductPrice());
-                    System.out.println("描述：" + c.getProductdesc());
-                }else{
-                    System.out.println("购物车为空");
-                    break;
-                }
-            }
-            choose = newChooseBuyAndPush();
-            if(choose != 3){
-                lookCarts(choose);
-            }else {
-                System.exit(0);
-            }
-        }else if(choose == 3){
-            System.exit(0);
         }
     }
 
