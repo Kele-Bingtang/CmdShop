@@ -24,7 +24,7 @@ public class Test {
             else if(choose == 2){
                 test.lookCarts(); //执行选择的操作
             }
-            else if(choose == 3){
+            else if(choose == 4){
                 isExits = false;
                 System.exit(0);
             }
@@ -86,7 +86,7 @@ public class Test {
      * @return
      */
     public int chooseBuyAndPush(){
-        System.out.println("请输入你要查询的功能：\n1、把商品加入购物车\n2、查询购物车内容\n3、退出");
+        System.out.println("请输入你要查询的功能：\n1、把商品加入购物车\n2、查询购物车内容\n3、购买商品\n4、退出");
         int choose  = sc.nextInt();
         return choose;
     }
