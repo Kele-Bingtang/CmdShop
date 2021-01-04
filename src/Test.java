@@ -1,4 +1,5 @@
 import java.io.InputStream;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Test {
@@ -14,7 +15,9 @@ public class Test {
     public static void main(String[] args) throws Exception{
         Test test = new Test();
         User oneUser = test.login();       //登录,获取User信息
-        Product[] products = test.lookProducts();    //查询商品，获得Product信息
+        test.lookProducts();    //查询商品
+        Product[] buyProducts = test.addCarts();    //获得购物车信息
+        int productAmmounts = 0;
 
         while(isExits){
             int choose = test.chooseBuyAndPush();   //进行商品和购物车选择
@@ -25,14 +28,25 @@ public class Test {
                 test.lookCarts(); //执行选择的操作
             }else if(choose == 3){
                 Order order = new Order();
-                if(oneUser != null && products != null){
+                if(oneUser != null && buyProducts != null){ //加入用户信息和购物车信息
                     order.setUser(oneUser);
-                    order.setProduct(products);
+                    order.setProduct(buyProducts);
                 }
-                for(int i = 0;i < test.carts.length;i++){
-                    order.setProductAmmount(test.carts[i].getProductPrice());
+
+                if(test.carts != null){ //加入购买总金额
+                    for(int i = 0;i < buyProducts.length;i++){
+                        productAmmounts += buyProducts[i].getProductPrice();
+                        order.setTotalPrice(productAmmounts);
+                    }
                 }
-                
+                Date date = new Date(); //加入日期
+                order.setOrderDate(date);
+
+                System.out.println("用户信息：" + order.getUser());
+                System.out.println("购物车信息：" + order.getProduct());
+                System.out.println("提交总金额：" + order.getTotalPrice());
+                System.out.println("购买日期：" + order.getOrderDate());
+
             }
             else if(choose == 4){
                 isExits = false;
@@ -107,7 +121,7 @@ public class Test {
      * 加入商品到购物车
      * @throws Exception
      */
-    public void addCarts() throws Exception{
+    public Product[] addCarts() throws Exception{
             System.out.println("请输入商品ID把该商品加入购物车");
             String pId = sc.next();
             int count = 0;
@@ -120,8 +134,12 @@ public class Test {
                 carts[count++] = product;
                 System.out.println("加入商品成功！");
             }
+            return carts;
         }
 
+    /**
+     * 查询商品内容
+     */
     public void lookCarts(){
         for(Product c : carts){
             if(c != null){
