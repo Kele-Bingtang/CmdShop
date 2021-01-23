@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 
 public class ReadProductExcel {
+    int firstNum = 0;       //第一个商品数量
+    int secondNum = 0;      //第二个商品数量
     public Product[] getAllProducts(InputStream file) {
         Product products[] = null;
         try {
@@ -46,6 +48,7 @@ public class ReadProductExcel {
     }
 
     public Product getProductByID(String id,InputStream in) {
+
         Product products[] = null;
         try {
             XSSFWorkbook xw = new XSSFWorkbook(in);
@@ -58,18 +61,29 @@ public class ReadProductExcel {
                     if (cell == null)
                         continue;
                     if (k == 0) {
-                        product.setProductId(this.getValue(cell));//给username属性赋值
+                        product.setProductId(this.getValue(cell));//给productId属性赋值
                     } else if (k == 1) {
-                        product.setProductName(this.getValue(cell));//给password属性赋值
+                        product.setProductName(this.getValue(cell));//给productName属性赋值
                     } else if (k == 2) {
                         String str = this.getValue(cell);
                         int value = Integer.parseInt(str);
-                        product.setProductPrice(value);//给address属性赋值
+                        product.setProductPrice(value);//给productPrice属性赋值
                     } else if (k == 3) {
-                        product.setProductdesc(this.getValue(cell));//给phone属性赋值
+                        product.setProductdesc(this.getValue(cell));//给productdesc属性赋值
                     }
                 }
                 if(id.equals(product.getProductId())){
+                    /*try {
+                        if(id.equals(getFirstProductID(in))){
+                            firstNum++;
+                            product.setNum(firstNum);
+                        }else if(id.equals(getSecondProductID(in))){
+                            secondNum++;
+                            product.setNum(secondNum);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }*/
                     return product;
                 }
             }
@@ -78,6 +92,26 @@ public class ReadProductExcel {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public String getFirstProductID(InputStream in) throws Exception{
+        XSSFWorkbook xw = new XSSFWorkbook(in);
+        XSSFSheet xs = xw.getSheetAt(0);
+        XSSFRow row = xs.getRow(1);
+        XSSFCell cell = row.getCell(0);
+        String id = this.getValue(cell);//给productId属性赋值
+
+        return id;
+    }
+
+    public String getSecondProductID(InputStream in) throws Exception{
+        XSSFWorkbook xw = new XSSFWorkbook(in);
+        XSSFSheet xs = xw.getSheetAt(0);
+        XSSFRow row = xs.getRow(1);
+        XSSFCell cell = row.getCell(0);
+        String id = this.getValue(cell);//给productId属性赋值
+
+        return id;
     }
 
     private String getValue(XSSFCell cell) {
