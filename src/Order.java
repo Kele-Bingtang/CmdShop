@@ -5,7 +5,6 @@ public class Order {
     private User user;  //用户信息
     private Product[] products;    //商品信息
     private int buyNum;         //购买数量
-    private int productAmmount; //商品价格
     private float totalPrice;   //交付金额
     private float finalPrice;   //实付金额
     private Date orderDate; //购买日期
@@ -33,14 +32,6 @@ public class Order {
 
     public void setBuyNum(int buyNum) {
         this.buyNum = buyNum;
-    }
-
-    public int getProductAmmount() {
-        return productAmmount;
-    }
-
-    public void setProductAmmount(int productAmmount) {
-        this.productAmmount = productAmmount;
     }
 
     public float getTotalPrice() {

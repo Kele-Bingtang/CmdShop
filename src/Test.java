@@ -1,4 +1,5 @@
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -25,13 +26,14 @@ public class Test {
         }
         if (!isLogin) {
             System.out.println("您以游客登陆，仅可以查看商品，无法进行操作");
+            System.out.println();
         }
         test.lookProducts();    //查询商品
 
 
         if(isLogin){        //用户名登陆
             Product[] buyProducts = test.addCarts();    //获得购物车信息
-            int productAmmounts = 0;    //商品金额
+            //int productAmmounts = 0;    //商品金额
             while(isExits){
 
                 int choose = test.chooseBuyAndPush();   //进行商品和购物车选择
@@ -42,7 +44,7 @@ public class Test {
                     test.lookCarts(); //执行选择的操作
                 }else if(choose == 3){
 
-                    /**
+                    /*
                      * 加入用户信息和购物车信息
                      */
                     Order order = new Order();
@@ -52,27 +54,27 @@ public class Test {
                     }
 
 
-                    /**
+                    /*
                      * 加入购买商品总金额和实付款金额
                      */
-                    for(int i = 0;i < buyProducts.length;i++){
-                        order.setBuyNum(buyProducts[i].getNum());
+                    for (Product buyProduct : buyProducts) {
+                        order.setBuyNum(buyProduct.getNum());
                         //productAmmounts += buyProducts[i].getProductPrice();    //计算总金额
-                        order.setTotalPrice(buyProducts[i].getProductPrice());
-                        order.setFinalPrice(buyProducts[i].getProductPrice());       //假设没有优惠券，实际付款
+                        order.setTotalPrice(buyProduct.getProductPrice());
+                        order.setFinalPrice(buyProduct.getProductPrice());       //假设没有优惠券，实际付款
                         //应该赋值完马上存，不然会覆盖原来的
                     }
-                    /**
+                    /*
                      * 加入日期
                      */
                     //Date date = new Date();
                     //order.setOrderDate(date);
                     order.setOrderDate(new Date());
 
-                    System.out.println("用户信息：" + order.getUser().toString());
-                    System.out.println("购物车信息：" + order.getProduct().toString());
+                    System.out.println("用户信息：" + order.getUser());
+                    System.out.println("购物车信息：" + Arrays.toString(order.getProduct()));
                     System.out.println("提交总金额：" + order.getTotalPrice());
-                    System.out.println("购买日期：" + order.getOrderDate().toString());
+                    System.out.println("购买日期：" + order.getOrderDate());
 
                     //下订单
                     CreateOrder.createOrder(order);
@@ -90,7 +92,7 @@ public class Test {
 
     /**
      * 登录界面
-     * @throws Exception
+     * @return 用户信息
      */
     public User login() throws Exception {
         sc = new Scanner(System.in);
@@ -115,13 +117,13 @@ public class Test {
             //File file=new File("C:\\Users\\Administrator\\IdeaProjects\\ConsoleShop\\src\\users.xlsx");
             inUser = Class.forName("Test").getResourceAsStream("/users.xlsx");//表示的就是classpath
             ReadUserExcel readUserExcel = new ReadUserExcel();//创建对象
-            User users[] = readUserExcel.readExcel(inUser);
+            User[] users = readUserExcel.readExcel(inUser);
 
-            for (int i = 0; i < users.length; i++) {
-                if (username.equals(users[i].getUsername()) && password.equals(users[i].getPassword())) {
+            for (User user : users) {
+                if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
                     System.out.println("登录成功");
 
-                    return users[i];
+                    return user;
                 } else {
                     System.out.println("登陆失败");
                 }
@@ -138,12 +140,11 @@ public class Test {
 
     /**
      * 商品内容界面
-     * @throws Exception
      */
-    public Product[] lookProducts() throws Exception{
+    public void lookProducts() throws Exception{
         inProduct = Class.forName("Test").getResourceAsStream("/product.xlsx");//表示的就是classpath
         readProductExcel = new ReadProductExcel();//创建对象
-        Product products[] = readProductExcel.getAllProducts(inProduct);
+        Product[] products = readProductExcel.getAllProducts(inProduct);
 
         System.out.println("商品内容：");
         for(Product p : products){
@@ -151,24 +152,23 @@ public class Test {
             System.out.println("名称：" + p.getProductName());
             System.out.println("价格：" + p.getProductPrice());
             System.out.println("描述：" + p.getProductdesc());
+            System.out.println();
         }
-        return products;
     }
 
     /**
      * 选择界面
-     * @return
+     * @return 选择
      */
     public int chooseBuyAndPush(){
         System.out.println("请输入你要查询的功能：\n1、把想要的商品加入购物车\n2、查询购物车内容\n3、结账购物车内的商品\n4、退出");
-        int choose  = sc.nextInt();
-        return choose;
+        return sc.nextInt();
     }
 
     /**
      * 加入商品到购物车
      * 导出购物车内容，以便结账
-     * @throws Exception
+     * @return 购物车内容
      */
     public Product[] addCarts() throws Exception{
             System.out.println("请输入商品ID把该商品加入购物车");
@@ -178,14 +178,13 @@ public class Test {
             inProduct = Class.forName("Test").getResourceAsStream("/product.xlsx");//表示的就是classpath
             Product product = readProductExcel.getProductByID(pId,inProduct);
             System.out.println("要购买的商品价格：" + product.getProductPrice());
-            if(product != null){
-                carts[count++] = product;
-                System.out.println("加入商品成功！");
-            }if(count >= 3){
-                System.out.println("购物车容量超出！");
+            carts[count++] = product;
+            System.out.println("加入商品成功！");
+            if(count >= 3){
+                    System.out.println("购物车容量超出！");
             }
 
-        /**
+        /*
          * Carts容量为3，不一定装满，如果为2，那么剩下的1为null，引发错误，所以需要重新创建一个Product存储
          */
         Product[] productCart = new Product[count];
