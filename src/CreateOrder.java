@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
 import java.io.FileOutputStream;
+import java.util.Map;
 
 
 public class CreateOrder {
@@ -50,6 +51,7 @@ public class CreateOrder {
             for (int i = 0; i < order.getProduct().length; i++) {
                 // 在索引0的位置创建行（最顶端的行）
                 HSSFRow row = sheet.createRow((short) i + 1);
+                String productId = order.getProduct()[i].getProductId();
                 for (int j = 0; j < 7; j++) {
                     HSSFCell cell = row.createCell((short) j);
                     // 在单元格中输入一些内容
@@ -57,11 +59,12 @@ public class CreateOrder {
                         cell.setCellValue(order.getUser().getUsername());
                         //cell.setCellStyle(style);//设置背景色
                     } else if (j == 1) {        //商品ID
-                        cell.setCellValue(order.getProduct()[i].getProductId());
+                        cell.setCellValue(productId);
                     } else if (j == 2) {          //商品名字
                         cell.setCellValue(order.getProduct()[i].getProductName());
                     } else if (j == 3) {          //购买数量
-                        cell.setCellValue(order.getBuyNum());
+                        Map<String,Integer> buyNum = order.getBuyNum();
+                        cell.setCellValue(buyNum.get(productId));
                     } else if (j == 4) {          //商品总价
                         cell.setCellValue(order.getTotalPrice());
                     } else if (j == 5) {          //实付款

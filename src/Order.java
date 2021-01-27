@@ -1,10 +1,12 @@
 import java.util.Date;
+import java.util.Map;
 
 public class Order {
 
     private User user;  //用户信息
     private Product[] products;    //商品信息
-    private int buyNum;         //购买数量
+    private Map<String,Integer> buyNum;         //购买数量
+
     private float totalPrice;   //交付金额
     private float finalPrice;   //实付金额
     private Date orderDate; //购买日期
@@ -26,11 +28,11 @@ public class Order {
         this.products = product;
     }
 
-    public int getBuyNum() {
+    public Map<String, Integer> getBuyNum() {
         return buyNum;
     }
 
-    public void setBuyNum(int buyNum) {
+    public void setBuyNum(Map<String, Integer> buyNum) {
         this.buyNum = buyNum;
     }
 

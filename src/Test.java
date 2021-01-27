@@ -1,7 +1,5 @@
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 public class Test {
     static Scanner sc;
@@ -11,11 +9,13 @@ public class Test {
 
     ReadProductExcel readProductExcel = null;
     Product[] carts = new Product[3];
-    int count = 0;  //购物车内容
+    static int count = 0;  //购物车内容
 
-
+    static int buyProductNum;
 
     static boolean isLogin = false;    //判断是否游客登陆
+
+    static Map<String, Integer> buyNum = new HashMap<>();   //加入购买数量
 
     public static void main(String[] args) throws Exception{
         Test test = new Test();
@@ -33,16 +33,15 @@ public class Test {
 
         if(isLogin){        //用户名登陆
             Product[] buyProducts = test.addCarts();    //获得购物车信息
-            //int productAmmounts = 0;    //商品金额
             while(isExits){
-
                 int choose = test.chooseBuyAndPush();   //进行商品和购物车选择
-                if(choose == 1){
-                    buyProducts = test.addCarts(); //执行选择的操作
+
+                if(choose == 1){        //1、把想要的商品加入购物车
+                    buyProducts = test.addCarts();
                 }
-                else if(choose == 2){
-                    test.lookCarts(); //执行选择的操作
-                }else if(choose == 3){
+                else if(choose == 2){       // 2、查询购物车内容
+                    test.lookCarts();
+                }else if(choose == 3){      // 3、结账购物车内的商品
 
                     /*
                      * 加入用户信息和购物车信息
@@ -54,12 +53,14 @@ public class Test {
                     }
 
 
-                    /*
-                     * 加入购买商品总金额和实付款金额
-                     */
                     for (Product buyProduct : buyProducts) {
-                        order.setBuyNum(buyProduct.getNum());
-                        //productAmmounts += buyProducts[i].getProductPrice();    //计算总金额
+                        /*
+                        加入购买商品数量
+                         */
+                        order.setBuyNum(buyNum);
+                        /*
+                         * 加入购买商品总金额和实付款金额
+                         */
                         order.setTotalPrice(buyProduct.getProductPrice());
                         order.setFinalPrice(buyProduct.getProductPrice());       //假设没有优惠券，实际付款
                         //应该赋值完马上存，不然会覆盖原来的
@@ -67,8 +68,6 @@ public class Test {
                     /*
                      * 加入日期
                      */
-                    //Date date = new Date();
-                    //order.setOrderDate(date);
                     order.setOrderDate(new Date());
 
                     System.out.println("用户信息：" + order.getUser());
@@ -172,7 +171,13 @@ public class Test {
      */
     public Product[] addCarts() throws Exception{
             System.out.println("请输入商品ID把该商品加入购物车");
-            String pId = sc.next();
+            /*
+            以【商品id,购买数量】为模板
+             */
+            String idAndBuyNum = sc.next();
+            String[] idAndBuyNums = idAndBuyNum.split(",");
+            String pId = idAndBuyNums[0];
+            buyProductNum = Integer.parseInt(idAndBuyNums[1]);   //购买商品数量（String转换为int）
 
             inProduct = null;
             inProduct = Class.forName("Test").getResourceAsStream("/product.xlsx");//表示的就是classpath
@@ -192,6 +197,8 @@ public class Test {
             for(int i =0;i < count;i++){
                 if(carts != null){
                     productCart[i] = carts[i];
+
+                    buyNum.put(pId,buyProductNum);  //把商品ID和商品数量放入Map
                 }
             }
 
