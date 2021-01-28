@@ -6,19 +6,20 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 
 public class CreateOrder {
     //Excel 文件要存放的位置，假定在F盘下
 
-    public static String outputFile = "F:\\order.xls";
+    public static String outputFile = System.getProperty("user.dir") + File.separator + "Order.xls";
 
-    public static void createOrder(Order order) throws Exception {
+
+    public static void createOrder(Order order) {
 
         try {
 

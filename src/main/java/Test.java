@@ -242,8 +242,6 @@ public class Test {
     }
 
     public SimpleDateFormat date(){
-        Date data = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        return sdf;
+        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     }
 }
