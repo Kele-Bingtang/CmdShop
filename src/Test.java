@@ -3,15 +3,14 @@ import java.util.*;
 
 public class Test {
     static Scanner sc;
-    static boolean isExits = true;
+    static boolean isExits = true;  //循环购物过程
     InputStream inUser;
     InputStream inProduct = null;
-
     ReadProductExcel readProductExcel = null;
     Product[] carts = new Product[3];
     static int count = 0;  //购物车内容
 
-    static int buyProductNum;
+    static int buyProductNum;      //获得商品数量
 
     static boolean isLogin = false;    //判断是否游客登陆
 
@@ -24,25 +23,22 @@ public class Test {
             System.out.println("用户名或密码错误,请重新输入用户名和密码！");
             oneUser = test.login();
         }
-        if (!isLogin) {
+        if (!isLogin) {     //游客登陆
             System.out.println("您以游客登陆，仅可以查看商品，无法进行操作");
             System.out.println();
+            test.lookProducts();    //查询商品
         }
-        test.lookProducts();    //查询商品
-
 
         if(isLogin){        //用户名登陆
-            Product[] buyProducts = test.addCarts();    //获得购物车信息
+            Product[] buyProducts = null;    //获得购物车信息
             while(isExits){
                 int choose = test.chooseBuyAndPush();   //进行商品和购物车选择
-
                 if(choose == 1){        //1、把想要的商品加入购物车
                     buyProducts = test.addCarts();
                 }
                 else if(choose == 2){       // 2、查询购物车内容
                     test.lookCarts();
                 }else if(choose == 3){      // 3、结账购物车内的商品
-
                     /*
                      * 加入用户信息和购物车信息
                      */
@@ -50,8 +46,10 @@ public class Test {
                     if(oneUser != null && buyProducts != null){ //
                         order.setUser(oneUser);
                         order.setProduct(buyProducts);
+                    }else if(buyProducts == null){
+                        System.out.println("购物车内容为空，结账失败！");
+                        continue;       //退出当前循环
                     }
-
 
                     for (Product buyProduct : buyProducts) {
                         /*
@@ -170,7 +168,8 @@ public class Test {
      * @return 购物车内容
      */
     public Product[] addCarts() throws Exception{
-            System.out.println("请输入商品ID把该商品加入购物车");
+            lookProducts();     //查询商品
+            System.out.println("请输入商品ID以及购买数量，逗号隔开，类如 1111,2，把该商品加入购物车");
             /*
             以【商品id,购买数量】为模板
              */
@@ -209,16 +208,24 @@ public class Test {
      * 查询购物车商品内容
      */
     public void lookCarts(){
+        for (Product p : carts){       //判断购物车是否为空
+            if(null == p){
+                System.out.println("购物车内容为空！");
+                return;
+            }else{
+                break;
+            }
+        }
+        System.out.println("购物车内容：");
         for(Product c : carts){
             if(c != null){
-                System.out.println("购物车内容：");
                 System.out.println("Id：" + c.getProductId());
                 System.out.println("名称：" + c.getProductName());
                 System.out.println("价格：" + c.getProductPrice());
                 System.out.println("描述：" + c.getProductdesc());
-                break;
+                System.out.println("购买数量：" + buyNum.get(c.getProductId()));
+                System.out.println();
             }else{
-                System.out.println("购物车为空");
                 break;
             }
         }
