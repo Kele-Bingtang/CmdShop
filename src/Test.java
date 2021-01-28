@@ -1,4 +1,5 @@
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Test {
@@ -14,7 +15,9 @@ public class Test {
 
     static boolean isLogin = false;    //判断是否游客登陆
 
+
     static Map<String, Integer> buyNum = new HashMap<>();   //加入购买数量
+
 
     public static void main(String[] args) throws Exception{
         Test test = new Test();
@@ -46,32 +49,40 @@ public class Test {
                     if(oneUser != null && buyProducts != null){ //
                         order.setUser(oneUser);
                         order.setProduct(buyProducts);
+
                     }else if(buyProducts == null){
                         System.out.println("购物车内容为空，结账失败！");
                         continue;       //退出当前循环
                     }
-
+                    Map<String,Float> productPrice = new HashMap<>();    //加入商品单价
+                    Map<String,Float> totalPrice = new HashMap<>();  //加入购买总价
+                    Map<String,SimpleDateFormat> orderDate = new HashMap<>();   //加入日期
                     for (Product buyProduct : buyProducts) {
+                         /*
+                        商品单价
+                         */
+                        productPrice.put(buyProduct.getProductId(),buyProduct.getProductPrice());
+                        order.setProductPrice(productPrice);
+
                         /*
                         加入购买商品数量
                          */
                         order.setBuyNum(buyNum);
+
                         /*
                          * 加入购买商品总金额和实付款金额
                          */
-                        order.setTotalPrice(buyProduct.getProductPrice());
-                        order.setFinalPrice(buyProduct.getProductPrice());       //假设没有优惠券，实际付款
-                        //应该赋值完马上存，不然会覆盖原来的
-                    }
-                    /*
-                     * 加入日期
-                     */
-                    order.setOrderDate(new Date());
+                        totalPrice.put(buyProduct.getProductId(),buyProduct.getProductPrice() * buyNum.get(buyProduct.getProductId())); //单价*数量
+                        order.setTotalPrice(totalPrice);
 
-                    System.out.println("用户信息：" + order.getUser());
-                    System.out.println("购物车信息：" + Arrays.toString(order.getProduct()));
-                    System.out.println("提交总金额：" + order.getTotalPrice());
-                    System.out.println("购买日期：" + order.getOrderDate());
+                        /*
+                         * 加入购买日期
+                         */
+                        orderDate.put(buyProduct.getProductId(),test.date());
+                        order.setOrderDate(orderDate);
+
+                    }
+
 
                     //下订单
                     CreateOrder.createOrder(order);
@@ -196,7 +207,6 @@ public class Test {
             for(int i =0;i < count;i++){
                 if(carts != null){
                     productCart[i] = carts[i];
-
                     buyNum.put(pId,buyProductNum);  //把商品ID和商品数量放入Map
                 }
             }
@@ -231,4 +241,9 @@ public class Test {
         }
     }
 
+    public SimpleDateFormat date(){
+        Date data = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        return sdf;
+    }
 }

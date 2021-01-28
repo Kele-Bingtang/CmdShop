@@ -7,6 +7,9 @@ import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
 import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -43,9 +46,9 @@ public class CreateOrder {
             cell01.setCellValue("用户");
             cell02.setCellValue("商品ID");
             cell03.setCellValue("商品名字");
-            cell04.setCellValue("购买数量");
-            cell05.setCellValue("商品总价");
-            cell06.setCellValue("实付款");
+            cell04.setCellValue("商品单价");
+            cell05.setCellValue("购买数量");
+            cell06.setCellValue("商品总价");
             cell07.setCellValue("下单时间");
 
             for (int i = 0; i < order.getProduct().length; i++) {
@@ -62,15 +65,19 @@ public class CreateOrder {
                         cell.setCellValue(productId);
                     } else if (j == 2) {          //商品名字
                         cell.setCellValue(order.getProduct()[i].getProductName());
-                    } else if (j == 3) {          //购买数量
+                    } else if (j == 3) {          //商品单价
+                        Map<String,Float> productPrice = order.getProductPrice();
+                        cell.setCellValue(productPrice.get(productId));
+                    } else if (j == 4) {          //购买数量
                         Map<String,Integer> buyNum = order.getBuyNum();
                         cell.setCellValue(buyNum.get(productId));
-                    } else if (j == 4) {          //商品总价
-                        cell.setCellValue(order.getTotalPrice());
-                    } else if (j == 5) {          //实付款
-                        cell.setCellValue(order.getFinalPrice());
+                    } else if (j == 5) {          //商品总价
+                        Map<String,Float> buyPrice = order.getTotalPrice();
+                        cell.setCellValue(buyPrice.get(productId));
                     } else if (j == 6) {          //下单时间
-                        cell.setCellValue(order.getOrderDate().toString());
+                        Map<String, SimpleDateFormat> orderDate = order.getOrderDate();
+                        String date = orderDate.get(productId).format(new Date());
+                        cell.setCellValue(date);
                     }
                 }
             }
